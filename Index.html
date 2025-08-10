@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyFoodPrint · Demo</title>
+  <style>
+    :root{
+      --ink:#1f2d3d; --brand:#18a999; --sun:#ffd166; --sea:#00b4d8; --bg:#f7fbfc;
+    }
+    *{box-sizing:border-box} body{margin:0;font:16px/1.6 system-ui,Roboto,Arial;
+      color:var(--ink);background:var(--bg)}
+    .topbar{background:linear-gradient(90deg,var(--brand),var(--sea));
+      color:#fff;padding:14px 18px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+    .brand .dot{width:28px;height:28px;background:#fff;border-radius:999px;display:inline-block}
+    .wrap{max-width:980px;margin:32px auto;padding:0 16px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .tab{background:#fff;border:1px solid #e6eff2;border-radius:999px;padding:8px 14px;
+      cursor:pointer}
+    .tab[aria-selected="true"]{background:var(--sun);border-color:var(--sun)}
+    .card{background:#fff;border:1px solid #e6eff2;border-radius:18px;padding:18px;margin:14px 0;
+      box-shadow:0 6px 24px rgba(0,0,0,.05)}
+    .btn{display:inline-block;padding:10px 14px;border-radius:999px;border:2px solid var(--brand);
+      color:var(--brand);text-decoration:none}
+    footer{margin:32px 0;color:#557}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span> MyFoodPrint · AB / SPAR pilot</div>
+  </header>
+
+  <main class="wrap">
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-screen="home">Αρχική</button>
+      <button class="tab" role="tab" data-screen="expiry">Ειδοποιήσεις λήξης</button>
+      <button class="tab" role="tab" data-screen="ai">Υποδείξεις (AI)</button>
+      <button class="tab" role="tab" data-screen="rewards">Πόντοι</button>
+    </nav>
+
+    <!-- Αρχική -->
+    <section class="card screen" id="home" style="display:block">
+      <h2>Καλώς ήρθες στο MyFoodPrint</h2>
+      <p>Παρακολούθησε αγορές, λάβε ειδοποιήσεις λήξης, κέρδισε πόντους και μείωσε τη σπατάλη.</p>
+      <ul>
+        <li>● <strong>3</strong> προϊόντα λήγουν σε 2 ημέρες</li>
+        <li>● <strong>2</strong> νέες υποδείξεις από τον AI Advisor</li>
+        <li>● <strong>5</strong> κοντρόλντα με +50 πόντους</li>
+      </ul>
+      <a class="btn" href="#" data-go="expiry">Δες τις λήξεις</a>
+      <a class="btn" href="#" style="border-color:var(--sun);color:#b77900" data-go="rewards">Πόντοι</a>
+    </section>
+
+    <!-- Λήξεις -->
+    <section class="card screen" id="expiry" style="display:none">
+      <h2>Ειδοποιήσεις λήξης</h2>
+      <p>Γιαούρτι (2τμχ) • λήγει σε 2 μέρες · Κοτόπουλο fileto • λήγει αύριο · Μαρούλι • σήμερα</p>
+      <a class="btn" href="#" data-go="ai">Πρότεινε συνταγές</a>
+    </section>
+
+    <!-- AI -->
+    <section class="card screen" id="ai" style="display:none">
+      <h2>Υποδείξεις AI</h2>
+      <p>Με βάση ό,τι λήγει: <em>κοτόπουλο, γιαούρτι, μαρούλι</em>.</p>
+      <ul>
+        <li>Bowls γιαουρτιού με μυρωδικά + μαρούλι (10’)</li>
+        <li>Ψητό κοτόπουλο με σαλάτα (20’)</li>
+      </ul>
+      <a class="btn" href="#" data-go="rewards">Πρόσθεσε πόντους</a>
+    </section>
+
+    <!-- Πόντοι -->
+    <section class="card screen" id="rewards" style="display:none">
+      <h2>Πόντοι & Κοντόλντα</h2>
+      <p>Σύνολο πόντων: <strong>350</strong></p>
+      <ul>
+        <li>✔ Zero-waste εβδομάδα: +100</li>
+        <li>✔ Μαγείρεψες 3 υλικά που έληγαν: +80</li>
+        <li>✔ Δωρήθηκαν 2 προϊόντα: +50</li>
+      </ul>
+      <a class="btn" href="#" data-go="home">Πίσω στην αρχική</a>
+    </section>
+
+    <footer>Rococo · Food Agents</footer>
+  </main>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const screens = document.querySelectorAll('.screen');
+    const goBtns = document.querySelectorAll('[data-go]');
+    function show(id){
+      screens.forEach(s=>s.style.display = s.id===id ? 'block' : 'none');
+      tabs.forEach(t=>t.setAttribute('aria-selected', t.dataset.screen===id));
+    }
+    tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.screen)));
+    goBtns.forEach(b=>b.addEventListener('click',e=>{
+      e.preventDefault(); show(b.dataset.go);
+    }));
+  </script>
+</body>
+</html>

@@ -1,102 +1,139 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MyFoodPrint · Demo</title>
-  <style>
-    :root{
-      --ink:#1f2d3d; --brand:#18a999; --sun:#ffd166; --sea:#00b4d8; --bg:#f7fbfc;
-    }
-    *{box-sizing:border-box} body{margin:0;font:16px/1.6 system-ui,Roboto,Arial;
-      color:var(--ink);background:var(--bg)}
-    .topbar{background:linear-gradient(90deg,var(--brand),var(--sea));
-      color:#fff;padding:14px 18px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:700}
-    .brand .dot{width:28px;height:28px;background:#fff;border-radius:999px;display:inline-block}
-    .wrap{max-width:980px;margin:32px auto;padding:0 16px}
-    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-    .tab{background:#fff;border:1px solid #e6eff2;border-radius:999px;padding:8px 14px;
-      cursor:pointer}
-    .tab[aria-selected="true"]{background:var(--sun);border-color:var(--sun)}
-    .card{background:#fff;border:1px solid #e6eff2;border-radius:18px;padding:18px;margin:14px 0;
-      box-shadow:0 6px 24px rgba(0,0,0,.05)}
-    .btn{display:inline-block;padding:10px 14px;border-radius:999px;border:2px solid var(--brand);
-      color:var(--brand);text-decoration:none}
-    footer{margin:32px 0;color:#557}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MyFoodPrint · Demo</title>
+<style>
+  :root{
+    --ink:#1e293b; --bg:#ffffff; --sea:#0ea5e9; --mint:#10b981; --sun:#f59e0b;
+    --muted:#64748b; --card:#f8fafc;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto}
+  .topbar{position:sticky;top:0;z-index:5;background:linear-gradient(90deg,#14b8a6,#0ea5e9);color:#fff;padding:14px 18px}
+  .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+  .dot{width:26px;height:26px;border-radius:50%;background:#fff;display:inline-block;box-shadow:0 0 0 4px rgba(255,255,255,.35) inset}
+  .wrap{max-width:1100px;margin:22px auto;padding:0 16px}
+  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .tab{padding:10px 14px;border-radius:999px;background:var(--card);border:1px solid #e2e8f0;color:var(--muted);cursor:pointer}
+  .tab.is-active{background:#fff;color:var(--ink);border-color:#cbd5e1;box-shadow:0 2px 10px rgba(2,6,23,.06)}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px}
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(12,1fr)}
+  .span-6{grid-column:span 6}
+  .span-12{grid-column:span 12}
+  @media (max-width:900px){.span-6{grid-column:span 12}}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid #e2e8f0}
+  .pill .led{width:10px;height:10px;border-radius:50%}
+  .led.red{background:#ef4444}.led.amethyst{background:#8b5cf6}.led.green{background:#22c55e}
+  .cta{display:inline-block;margin-top:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--sea);color:var(--sea);text-decoration:none}
+  .cta.fill{background:var(--mint);border-color:var(--mint);color:#fff}
+  footer{margin:36px 0;color:var(--muted);font-size:14px;text-align:center}
+  /* οθόνες */
+  .screen{display:none}.screen.is-visible{display:block}
+</style>
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="dot"></span> MyFoodPrint · AB / SPAR pilot</div>
+    <div class="brand">
+      <span class="dot"></span>
+      <span>MyFoodPrint</span>
+      <span style="opacity:.8;font-weight:500">· demo</span>
+      <span style="margin-left:auto;font-weight:600;">Έξυπνη μείωση σπατάλης</span>
+    </div>
   </header>
 
   <main class="wrap">
-    <nav class="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true" data-screen="home">Αρχική</button>
-      <button class="tab" role="tab" data-screen="expiry">Ειδοποιήσεις λήξης</button>
-      <button class="tab" role="tab" data-screen="ai">Υποδείξεις (AI)</button>
-      <button class="tab" role="tab" data-screen="rewards">Πόντοι</button>
+    <nav class="tabs" id="tabs">
+      <button class="tab is-active" data-screen="home">Αρχική</button>
+      <button class="tab" data-screen="expiry">Ειδοποιήσεις λήξης</button>
+      <button class="tab" data-screen="ai">Υποδείξεις AI</button>
+      <button class="tab" data-screen="dash">Πίνακας</button>
     </nav>
 
-    <!-- Αρχική -->
-    <section class="card screen" id="home" style="display:block">
-      <h2>Καλώς ήρθες στο MyFoodPrint</h2>
-      <p>Παρακολούθησε αγορές, λάβε ειδοποιήσεις λήξης, κέρδισε πόντους και μείωσε τη σπατάλη.</p>
-      <ul>
-        <li>● <strong>3</strong> προϊόντα λήγουν σε 2 ημέρες</li>
-        <li>● <strong>2</strong> νέες υποδείξεις από τον AI Advisor</li>
-        <li>● <strong>5</strong> κοντρόλντα με +50 πόντους</li>
-      </ul>
-      <a class="btn" href="#" data-go="expiry">Δες τις λήξεις</a>
-      <a class="btn" href="#" style="border-color:var(--sun);color:#b77900" data-go="rewards">Πόντοι</a>
+    <!-- ΑΡΧΙΚΗ -->
+    <section class="screen is-visible" id="home">
+      <div class="card span-12" style="margin-bottom:18px">
+        <h2 style="margin:0 0 6px">Καλώς ήρθες στο MyFoodPrint</h2>
+        <p style="margin:0 0 12px;color:var(--muted)">Παρακολούθησε τις αγορές σου, λάβε ειδοποιήσεις λήξης και κέρδισε πόντους.</p>
+        <div class="grid">
+          <div class="span-6">
+            <div class="pill"><span class="led red"></span> 3 προϊόντα λήγουν σε 2 ημέρες</div>
+          </div>
+          <div class="span-6">
+            <div class="pill"><span class="led amethyst"></span> 2 νέες υποδείξεις από τον AI Advisor</div>
+          </div>
+          <div class="span-12">
+            <div class="pill"><span class="led green"></span> 5 κοντόληκτα (+50 πόντοι)</div>
+          </div>
+        </div>
+        <a class="cta" href="#" data-go="expiry">Δες τις λήξεις</a>
+        <a class="cta fill" href="#" data-go="ai">Κέρδισε πόντους</a>
+      </div>
+
+      <div class="grid">
+        <div class="card span-6">
+          <h3>Cook with your child</h3>
+          <p style="color:var(--muted)">Ολοκλήρωσε 1 συνταγή με 3 υλικά που λήγουν → +100 πόντοι.</p>
+          <a class="cta" href="#" data-go="ai">Ξεκίνα</a>
+        </div>
+        <div class="card span-6">
+          <h3>Zero-waste week</h3>
+          <p style="color:var(--muted)">Μείωσε τα υπολείμματα πιάτου κατά 30%.</p>
+          <a class="cta" href="#" data-go="dash">Παρακολούθηση</a>
+        </div>
+      </div>
     </section>
 
-    <!-- Λήξεις -->
-    <section class="card screen" id="expiry" style="display:none">
-      <h2>Ειδοποιήσεις λήξης</h2>
-      <p>Γιαούρτι (2τμχ) • λήγει σε 2 μέρες · Κοτόπουλο fileto • λήγει αύριο · Μαρούλι • σήμερα</p>
-      <a class="btn" href="#" data-go="ai">Πρότεινε συνταγές</a>
+    <!-- ΛΗΞΕΙΣ -->
+    <section class="screen" id="expiry">
+      <div class="card">
+        <h2>Ειδοποιήσεις λήξης</h2>
+        <ul>
+          <li>Γιαούρτι 2× — λήγει σε 2 ημέρες</li>
+          <li>Ψωμί τοστ — λήγει αύριο</li>
+          <li>Σπανάκι — καλύτερα να καταναλωθεί σήμερα</li>
+        </ul>
+        <a class="cta" href="#" data-go="ai">Δες ιδέες χρήσης</a>
+      </div>
     </section>
 
     <!-- AI -->
-    <section class="card screen" id="ai" style="display:none">
-      <h2>Υποδείξεις AI</h2>
-      <p>Με βάση ό,τι λήγει: <em>κοτόπουλο, γιαούρτι, μαρούλι</em>.</p>
-      <ul>
-        <li>Bowls γιαουρτιού με μυρωδικά + μαρούλι (10’)</li>
-        <li>Ψητό κοτόπουλο με σαλάτα (20’)</li>
-      </ul>
-      <a class="btn" href="#" data-go="rewards">Πρόσθεσε πόντους</a>
+    <section class="screen" id="ai">
+      <div class="card">
+        <h2>Προσωπικές Υποδείξεις (AI)</h2>
+        <p style="color:var(--muted)">Με βάση τα κοντόληκτα: γιαούρτι, ψωμί τοστ, σπανάκι.</p>
+        <ol>
+          <li>Toast με σπανάκι & γιαούρτι με βότανα.</li>
+          <li>Σαλάτα σπανάκι-γιαούρτι με κρίθινα παξιμάδια.</li>
+        </ol>
+        <a class="cta" href="#" data-go="home">Πίσω στην αρχική</a>
+      </div>
     </section>
 
-    <!-- Πόντοι -->
-    <section class="card screen" id="rewards" style="display:none">
-      <h2>Πόντοι & Κοντόλντα</h2>
-      <p>Σύνολο πόντων: <strong>350</strong></p>
-      <ul>
-        <li>✔ Zero-waste εβδομάδα: +100</li>
-        <li>✔ Μαγείρεψες 3 υλικά που έληγαν: +80</li>
-        <li>✔ Δωρήθηκαν 2 προϊόντα: +50</li>
-      </ul>
-      <a class="btn" href="#" data-go="home">Πίσω στην αρχική</a>
+    <!-- ΠΙΝΑΚΑΣ -->
+    <section class="screen" id="dash">
+      <div class="card">
+        <h2>Πίνακας</h2>
+        <p style="color:var(--muted)">Σπατάλη (τελευταίες 4 εβδομάδες): ↓ 28% · Πόντοι: 540</p>
+        <a class="cta" href="#" data-go="home">Αρχική</a>
+      </div>
     </section>
 
-    <footer>Rococo · Food Agents</footer>
+    <footer>MyFoodPrint · Demo (στατικό δείγμα για Canva/Pages)</footer>
   </main>
 
-  <script>
-    const tabs = document.querySelectorAll('.tab');
-    const screens = document.querySelectorAll('.screen');
-    const goBtns = document.querySelectorAll('[data-go]');
-    function show(id){
-      screens.forEach(s=>s.style.display = s.id===id ? 'block' : 'none');
-      tabs.forEach(t=>t.setAttribute('aria-selected', t.dataset.screen===id));
-    }
-    tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.screen)));
-    goBtns.forEach(b=>b.addEventListener('click',e=>{
-      e.preventDefault(); show(b.dataset.go);
-    }));
-  </script>
+<script>
+  const tabs=[...document.querySelectorAll('.tab')];
+  const screens=[...document.querySelectorAll('.screen')];
+  function show(id){
+    screens.forEach(s=>s.classList.toggle('is-visible', s.id===id));
+    tabs.forEach(t=>t.classList.toggle('is-active', t.dataset.screen===id));
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.screen)));
+  document.querySelectorAll('[data-go]').forEach(b=>{
+    b.addEventListener('click',e=>{e.preventDefault();show(b.dataset.go);});
+  });
+</script>
 </body>
 </html>
